@@ -1,0 +1,53 @@
+@import url('./fonts/fonts.css');
+
+:root {
+  --color-text: #000;
+  --color-background: #386646;
+  --corner-radius: 15px;
+  --window-padding: 30px;
+  --delete-button-color: #f44336;
+  --common-button-color: #4c63af;
+  --error-color: #f44336;
+  --success-color: #4caf50;
+  --main-color: #386646;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.6;
+  /* font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif; */
+  font-family: 'Onest';
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input {
+  font-family: 'Onest';
+}
