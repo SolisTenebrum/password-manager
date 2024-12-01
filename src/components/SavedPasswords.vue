@@ -71,12 +71,13 @@ const onCopy = async (password) => {
         <li v-for="item in filteredPasswords" :key="item" class="saved-passwords-item">
           <input class="data" :value="item.url" disabled type="url" />
           <input class="data" :value="item.password" disabled :type="item.isVisible ? 'text' : 'password'" />
-          <button class="show-btn" :class="isDeleting && 'disabled'" @click="showPassword(item.id)"><show-password-icon
+          <button class="show-btn" :class="isDeleting && 'disabled'" type="button"
+            @click="showPassword(item.id)"><show-password-icon
               :isActive="isIconActive[item.id]"></show-password-icon></button>
-          <button class="copy-btn" :class="isDeleting && 'disabled'"
+          <button class="copy-btn" :class="isDeleting && 'disabled'" type="button"
             @click="onCopy(item.password)"><copy-icon></copy-icon></button>
-          <button class="delete-btn" :class="isDeleting && 'disabled'" @click="deletePassword(item.id)"><template
-              v-if="!isDeleting"><delete-icon></delete-icon></template>
+          <button class="delete-btn" :class="isDeleting && 'disabled'" type="button"
+            @click="deletePassword(item.id)"><template v-if="!isDeleting"><delete-icon></delete-icon></template>
             <template v-else><loading-icon></loading-icon></template>
           </button>
         </li>
@@ -287,8 +288,8 @@ const onCopy = async (password) => {
 .delete-btn.disabled,
 .copy-btn.disabled,
 .show-btn.disabled {
-  cursor: not-allowed;
   background-color: #c2c2c2;
+  pointer-events: none;
 }
 
 .error-popup,
@@ -309,7 +310,8 @@ const onCopy = async (password) => {
 }
 
 .error-popup.visible,
-.copy-popup.visible, .success-popup.visible {
+.copy-popup.visible,
+.success-popup.visible {
   visibility: visible;
   opacity: 1;
 }
