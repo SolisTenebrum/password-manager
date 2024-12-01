@@ -127,10 +127,15 @@ const generateUniqueId = (array) => {
 }
 
 const copyToClipboard = async (password) => {
+  if (!navigator.clipboard) {
+    console.error('Clipboard API is not supported')
+    return
+  }
   try {
     await navigator.clipboard.writeText(password)
   } catch (err) {
-    console.error('Failed to copy password:', err)
+    console.error('Failed to copy password to clipboard:', err)
+    throw err
   }
 }
 
