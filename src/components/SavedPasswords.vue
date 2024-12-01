@@ -36,13 +36,17 @@ const showPassword = (passwordId) => {
   }
 }
 
-const onCopy = (password) => {
-  isCopied.value = true
-  copyToClipboard(password)
-
-  setTimeout(() => {
-    isCopied.value = false
-  }, 1000)
+const onCopy = async (password) => {
+  isCopied.value = true;
+  try {
+    await copyToClipboard(password);
+    setTimeout(() => {
+      isCopied.value = false;
+    }, 1000);
+  } catch (err) {
+    console.error('Failed to copy password:', err);
+    isCopied.value = false; // Сбрасываем состояние в случае ошибки
+  }
 }
 </script>
 
@@ -280,7 +284,8 @@ const onCopy = (password) => {
   background-color: #c2c2c2;
 }
 
-.error-popup, .success-popup {
+.error-popup,
+.success-popup {
   padding: 10px;
   position: absolute;
   bottom: -20%;
@@ -297,12 +302,14 @@ const onCopy = (password) => {
   transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
 }
 
-.error-popup.visible, .success-popup.visible {
+.error-popup.visible,
+.success-popup.visible {
   visibility: visible;
   opacity: 1;
 }
 
-.error-popup-container, .success-popup-container {
+.error-popup-container,
+.success-popup-container {
   background-color: #ffffff;
   padding: 20px;
   display: flex;
