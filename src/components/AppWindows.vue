@@ -56,6 +56,8 @@ const addPassword = async (data) => {
     localStorage.setItem('savedPasswords', JSON.stringify(savedPasswords.value))
     successMessage.value = 'Password saved successfully'
 
+    formData.value = { id: '', url: '', password: '' }
+
     setTimeout(() => {
       successMessage.value = ''
     }, 2000)
