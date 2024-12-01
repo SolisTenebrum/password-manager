@@ -26,7 +26,7 @@ watch(() => props.formData, (newFormData) => {
 })
 
 const inputType = ref('password')
-const isIconActive = ref(false)
+const isShowPasswordIconActive = ref(false)
 const isSettingsActive = ref(false)
 const ownSetEnabled = ref(false)
 
@@ -74,8 +74,11 @@ const handleOwnSetInputChange = (event) => {
 
 const onGenerate = () => {
   localFormData.value.password = generatePassword(options.value, props.updateGenerationInfoMessage);
-  inputType.value = 'text'
-  isIconActive.value = true
+
+  if (localFormData.value.password) {
+    inputType.value = 'text'
+    isShowPasswordIconActive.value = true
+  }
 
   emit('update:generationInfoMessage', 'Password generated')
 
@@ -94,7 +97,7 @@ const onSubmit = () => {
 }
 
 const showPassword = () => {
-  isIconActive.value = !isIconActive.value
+  isShowPasswordIconActive.value = !isShowPasswordIconActive.value
   inputType.value = inputType.value === 'password' ? 'text' : 'password'
 }
 
@@ -139,7 +142,7 @@ onBeforeUnmount(() => {
           :type="inputType.includes('text') ? 'text' : 'password'" :minlength="6" :maxlength="64"
           v-model="localFormData.password" />
         <button class="show-password-btn" type="button" @click="showPassword"><show-password-icon
-            :isActive="isIconActive"></show-password-icon></button>
+            :isActive="isShowPasswordIconActive"></show-password-icon></button>
         <button class="generate-btn" type="button" @click="onGenerate"><generate-icon></generate-icon></button>
         <button class="settings-btn" :class="isSettingsActive && 'active'" type="button"
           @click="openSettings"><settings-icon></settings-icon></button>
