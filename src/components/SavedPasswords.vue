@@ -13,7 +13,8 @@ const props = defineProps({
   savedPasswords: Array,
   deletePassword: Function,
   isDeleting: Boolean,
-  popupMessage: String
+  popupSuccessMessage: String,
+  popupErrorMessage: String
 })
 
 const isIconActive = ref({})
@@ -45,7 +46,7 @@ const onCopy = async (password) => {
     }, 1000);
   } catch (err) {
     console.error('Failed to copy password:', err);
-    isCopied.value = false; // Сбрасываем состояние в случае ошибки
+    isCopied.value = false;
   }
 }
 </script>
@@ -82,16 +83,22 @@ const onCopy = async (password) => {
       </ul>
     </div>
   </div>
-  <div class="success-popup" :class="props.popupMessage && 'visible'">
-    <div class="success-popup-container">
-      <p class="message error">Failed to delete password. Try again later</p>
+  <div class="copy-popup" :class="isCopied && 'visible'">
+    <div class="copy-popup-container">
+      <p class="message clipboard">Copied to clipboard </p>
     </div>
   </div>
-  <div class="error-popup" :class="isCopied && 'visible'">
+  <div class="error-popup" :class="props.popupErrorMessage && 'visible'">
     <div class="error-popup-container">
-      <p class="message clipboard">Copied to clipboard</p>
+      <p class="message error">{{ props.popupErrorMessage }}</p>
     </div>
   </div>
+  <div class="success-popup" :class="props.popupSuccessMessage && 'visible'">
+    <div class="success-popup-container">
+      <p class="message success">{{ props.popupSuccessMessage }}</p>
+    </div>
+  </div>
+
 </template>
 
 <style scoped>
@@ -285,12 +292,12 @@ const onCopy = async (password) => {
 }
 
 .error-popup,
+.copy-popup,
 .success-popup {
   padding: 10px;
   position: absolute;
   bottom: -20%;
   max-width: 254px;
-  width: 100%;
   left: 50%;
   transform: translateX(-50%);
   height: 100px;
@@ -299,16 +306,16 @@ const onCopy = async (password) => {
   align-items: center;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
 }
 
 .error-popup.visible,
-.success-popup.visible {
+.copy-popup.visible, .success-popup.visible {
   visibility: visible;
   opacity: 1;
 }
 
 .error-popup-container,
+.copy-popup-container,
 .success-popup-container {
   background-color: #ffffff;
   padding: 20px;
@@ -327,6 +334,10 @@ const onCopy = async (password) => {
 }
 
 .message.clipboard {
+  color: var(--success-color);
+}
+
+.message.success {
   color: var(--success-color);
 }
 </style>
