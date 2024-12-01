@@ -75,40 +75,41 @@ const generatePassword = (options, setInfoMessage) => {
     password += symbols[Math.floor(Math.random() * symbols.length)]
   }
 
-  if (settings.letters.randomCase) {
-    switch (settings.letters.randomCase) {
-      case 'uppercase':
-        password += getRandomChar(alphabetUpper)
-        break
-      case 'lowercase':
-        password += getRandomChar(alphabetLower)
-        break
-      case 'both':
-        password += getRandomChar(alphabetLower)
-        password += getRandomChar(alphabetUpper)
-        break
-    }
+  switch (settings.letters.randomCase) {
+    case 'uppercase':
+      password += getRandomChar(alphabetUpper)
+      break
+    case 'lowercase':
+      password += getRandomChar(alphabetLower)
+      break
+    case 'both':
+      password += getRandomChar(alphabetLower)
+      password += getRandomChar(alphabetUpper)
+      break
+    default:
+      password += getRandomChar(allChars)
+      break
   }
 
   let remainingLength = settings.length - password.length
 
-  while (remainingLength > 0) {
-    if (settings.letters.randomCase) {
-      switch (settings.letters.randomCase) {
-        case 'uppercase':
-          password += getRandomChar(alphabetUpper)
-          break
-        case 'lowercase':
-          password += getRandomChar(alphabetLower)
-          break
-        case 'both':
-          password +=
-            Math.random() < 0.5 ? getRandomChar(alphabetLower) : getRandomChar(alphabetUpper)
-          break
-      }
-    } else {
-      password += allChars[Math.floor(Math.random() * allChars.length)]
+  const getRandomCaseChar = (caseType) => {
+    switch (caseType) {
+      case 'uppercase':
+        return getRandomChar(alphabetUpper)
+      case 'lowercase':
+        return getRandomChar(alphabetLower)
+      case 'both':
+        return Math.random() < 0.5 ? getRandomChar(alphabetLower) : getRandomChar(alphabetUpper)
+      default:
+        return allChars[Math.floor(Math.random() * allChars.length)]
     }
+  }
+
+  while (remainingLength > 0) {
+    password += settings.letters.randomCase
+      ? getRandomCaseChar(settings.letters.randomCase)
+      : getRandomChar(allChars)
     remainingLength--
   }
 
