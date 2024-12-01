@@ -137,16 +137,31 @@ onBeforeUnmount(() => {
     <h2 class="title">Add Service</h2>
     <form class="form" @submit.prevent="onSubmit">
       <div class="inputs">
-        <input name="url" class="input" placeholder="Enter service URL" required type="url"
+        <input 
+          name="url" 
+          class="input" 
+          placeholder="Enter service URL" 
+          required type="url"
           v-model="localFormData.url" />
-        <input name="password" class="input" placeholder="Enter password" required
-          :type="inputType.includes('text') ? 'text' : 'password'" :minlength="6" :maxlength="64"
+        <input 
+          name="password" 
+          class="input" 
+          placeholder="Enter password" 
+          required
+          :type="inputType.includes('text') ? 'text' : 'password'" 
+          :minlength="6" 
+          :maxlength="64"
           v-model="localFormData.password" />
-        <action-button @click="showPassword" class="eye-icon-wrapper"><show-password-icon
-            :isActive="isShowPasswordIconActive"></show-password-icon></action-button>
-        <action-button @click="onGenerate" class="dice-icon-wrapper"><generate-icon></generate-icon></action-button>
+        <action-button @click="showPassword" class="eye-icon-wrapper">
+          <show-password-icon :isActive="isShowPasswordIconActive"></show-password-icon>
+        </action-button>
+        <action-button @click="onGenerate" class="dice-icon-wrapper">
+          <generate-icon></generate-icon>
+        </action-button>
         <action-button :class="isSettingsActive && 'active'" @click="openSettings"
-          class="gear-icon-wrapper"><settings-icon :isActive="isSettingsActive"></settings-icon></action-button>
+          class="gear-icon-wrapper">
+          <settings-icon :isActive="isSettingsActive"></settings-icon>
+        </action-button>
         <div class="info-container">
           <p v-if="props.generationInfoMessage" class="info-text">{{ props.generationInfoMessage }}</p>
           <span v-else-if="isLoading" class="loader"></span>

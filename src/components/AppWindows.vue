@@ -78,7 +78,6 @@ const addPassword = async (data) => {
   }
 }
 
-
 const deletePassword = async (id) => {
   isDeleting.value = true
 
@@ -105,7 +104,6 @@ const deletePassword = async (id) => {
   }
 }
 
-
 onMounted(() => {
   setTimeout(() => {
     if (activeWindow.value === 'saved' || localStorage.getItem('isFirstEntry')) return;
@@ -124,18 +122,32 @@ onMounted(() => {
   <section class="windows">
     <div class="main-window" @click="setMainActive" :style="{ 'z-index': zIndexMain }"
       :class="{ 'main-window_active': activeWindow === 'main' }">
-      <PasswordForm :activeWindow="activeWindow" :savedPasswords="savedPasswords" :addPassword="addPassword"
-        :isLoading="isLoading" :errorMessage="errorMessage" :formData="formData" @updateFormData="updateFormData"
-        :successMessage="successMessage" :generationInfoMessage="generationInfoMessage"
-        @updateGenerationInfoMessage="updateGenerationInfoMessage"
-        :updateGenerationInfoMessage="updateGenerationInfoMessage" />
+      <PasswordForm 
+      :activeWindow="activeWindow" 
+      :savedPasswords="savedPasswords" 
+      :addPassword="addPassword"
+      :isLoading="isLoading" 
+      :errorMessage="errorMessage" 
+      :formData="formData" 
+      @updateFormData="updateFormData"
+      :successMessage="successMessage" 
+      :generationInfoMessage="generationInfoMessage"
+      @updateGenerationInfoMessage="updateGenerationInfoMessage"
+      :updateGenerationInfoMessage="updateGenerationInfoMessage" />
     </div>
 
-    <div class="saved-window" @click="setSavedActive" :style="{ 'z-index': zIndexSaved }"
+    <div 
+      class="saved-window" 
+      @click="setSavedActive" :style="{ 'z-index': zIndexSaved }"
       :class="{ 'saved-window_active': activeWindow === 'saved' }">
-      <SavedPasswords :activeWindow="activeWindow" :showIcon="showIcon" :savedPasswords="savedPasswords"
-        :deletePassword="deletePassword" :isDeleting="isDeleting" :popupSuccessMessage="popupSuccessMessage"
-        :popupErrorMessage="popupErrorMessage" />
+      <SavedPasswords 
+      :activeWindow="activeWindow" 
+      :showIcon="showIcon" 
+      :savedPasswords="savedPasswords"
+      :deletePassword="deletePassword" 
+      :isDeleting="isDeleting" 
+      :popupSuccessMessage="popupSuccessMessage"
+      :popupErrorMessage="popupErrorMessage" />
     </div>
   </section>
 </template>
