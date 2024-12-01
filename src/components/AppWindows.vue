@@ -48,7 +48,7 @@ const addPasword = async (data) => {
   const randomChanceToConnect = Math.floor(Math.random() * 10)
   if (randomChanceToConnect > 5) {
     try {
-      const newPassword = { ...data, id: generateUniqueId(savedPasswords.value) }
+      const newPassword = { ...data, id: generateUniqueId() }
       savedPasswords.value.push(newPassword)
       localStorage.setItem('savedPasswords', JSON.stringify(savedPasswords.value))
       successMessage.value = 'Password saved successfully'

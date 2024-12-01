@@ -4,6 +4,14 @@ const generatePassword = (options, setInfoMessage) => {
   const numbers = '0123456789'
   const symbols = '!@#$%^&*()-_=+[]{}|;:\'",.<>?/'
 
+  const noCheckboxSelected =
+    !settings.letters.uppercase &&
+    !settings.letters.lowercase &&
+    !settings.letters.randomCase &&
+    !settings.numbers &&
+    !settings.symbols &&
+    !settings.ownSet
+
   const generateRandomCase = () => {
     const randomNumber = Math.random()
     if (randomNumber < 0.3) {
@@ -30,14 +38,7 @@ const generatePassword = (options, setInfoMessage) => {
     ownSetInput: options.ownSetInput,
   }
 
-  if (
-    !settings.letters.uppercase &&
-    !settings.letters.lowercase &&
-    !settings.letters.randomCase &&
-    !settings.numbers &&
-    !settings.symbols &&
-    !settings.ownSet
-  ) {
+  if (noCheckboxSelected) {
     setInfoMessage('No checkbox selected')
     setTimeout(() => {
       setInfoMessage('')
@@ -117,11 +118,8 @@ const generatePassword = (options, setInfoMessage) => {
     .join('')
 }
 
-const generateUniqueId = (array) => {
-  let id
-  do {
-    id = Math.floor(Math.random() * 1000000)
-  } while (array.find((item) => item.id === id))
+const generateUniqueId = () => {
+  const id = crypto.randomUUID()
 
   return id
 }
