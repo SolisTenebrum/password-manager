@@ -363,6 +363,8 @@ onBeforeUnmount(() => {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  width: 100%;
+  max-width: 165px;
 }
 
 .settings-container.active {
@@ -378,7 +380,6 @@ onBeforeUnmount(() => {
   padding: 0;
   row-gap: 10px;
   color: white;
-  max-width: 130px;
 }
 
 .settings-item {
@@ -412,7 +413,7 @@ input[type="checkbox"] {
   border: 1px solid;
   width: 76%;
   border-color: #c2c2c2;
-  padding: 3.6px;
+  padding: 2.6px;
 }
 
 .info-text.success {
