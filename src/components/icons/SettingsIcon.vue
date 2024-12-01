@@ -1,11 +1,13 @@
 <script setup>
-
+defineProps({
+  isActive: Boolean
+})
 </script>
 
 <template>
   <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
     y="0px" viewBox="0 0 478.703 478.703" style="enable-background:new 0 0 478.703 478.703;" xml:space="preserve"
-    class="settings-icon">
+    class="settings-icon" :class="{ 'active': isActive }">
     <g>
       <g>
         <path
@@ -29,5 +31,20 @@
 
 .settings-icon:hover {
   transform: rotate(-45deg);
+}
+
+.settings-icon.active {
+  transition: transform 0.3s ease-in-out;
+  animation: rotation 3s linear infinite reverse;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

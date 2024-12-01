@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeUnmount, defineEmits, watch } from 'vue';
 import GenerateIcon from './icons/GenerateIcon.vue';
 import ShowPasswordIcon from './icons/ShowPasswordIcon.vue';
 import SettingsIcon from './icons/SettingsIcon.vue';
+import ActionButton from './ActionButton.vue';
 import { generatePassword } from '../utils/utils'
 
 const props = defineProps({
@@ -115,7 +116,7 @@ const updateLength = (event) => {
 
 const handleClickOutside = (event) => {
   const menu = document.querySelector('.settings-container')
-  const button = document.querySelector('.settings-btn')
+  const button = document.querySelector('.gear-icon-wrapper')
 
   if (!menu.contains(event.target) && !button.contains(event.target)) {
     closeSettings()
@@ -141,11 +142,11 @@ onBeforeUnmount(() => {
         <input name="password" class="input" placeholder="Enter password" required
           :type="inputType.includes('text') ? 'text' : 'password'" :minlength="6" :maxlength="64"
           v-model="localFormData.password" />
-        <button class="show-password-btn" type="button" @click="showPassword"><show-password-icon
-            :isActive="isShowPasswordIconActive"></show-password-icon></button>
-        <button class="generate-btn" type="button" @click="onGenerate"><generate-icon></generate-icon></button>
-        <button class="settings-btn" :class="isSettingsActive && 'active'" type="button"
-          @click="openSettings"><settings-icon></settings-icon></button>
+        <action-button @click="showPassword" class="eye-icon-wrapper"><show-password-icon
+            :isActive="isShowPasswordIconActive"></show-password-icon></action-button>
+        <action-button @click="onGenerate" class="dice-icon-wrapper"><generate-icon></generate-icon></action-button>
+        <action-button :class="isSettingsActive && 'active'" @click="openSettings"
+          class="gear-icon-wrapper"><settings-icon :isActive="isSettingsActive"></settings-icon></action-button>
         <div class="info-container">
           <p v-if="props.generationInfoMessage" class="info-text">{{ props.generationInfoMessage }}</p>
           <span v-else-if="isLoading" class="loader"></span>
@@ -226,7 +227,7 @@ onBeforeUnmount(() => {
 .inputs {
   display: grid;
   grid-template-areas: 'url url url url'
-    'password show-btn generate-btn settings-btn';
+    'password eye-icon-wrapper dice-icon-wrapper gear-icon-wrapper';
   width: 100%;
   gap: 10px;
   margin: auto 0;
@@ -297,62 +298,38 @@ onBeforeUnmount(() => {
   background-color: #c2c2c2;
 }
 
-.generate-btn {
-  padding: 10px 10px;
-  border-radius: 5px;
-  border: none;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
-  outline: none;
-  cursor: pointer;
-  background-color: var(--color-background);
-  color: #ffffff;
-  transition: background-color 0.3s ease-in-out;
-  grid-area: generate-btn;
-  display: flex;
-  justify-content: center;
-  justify-self: flex-end;
-}
-
-.generate-btn:hover,
-.show-password-btn:hover,
-.settings-btn:hover {
+.eye-icon-wrapper:hover,
+.dice-icon-wrapper:hover,
+.gear-icon-wrapper:hover {
   background-color: #36b85d;
 }
 
-.show-password-btn {
-  padding: 10px 10px;
-  border-radius: 5px;
-  border: none;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
-  outline: none;
-  cursor: pointer;
-  background-color: var(--color-background);
-  color: #ffffff;
-  transition: background-color 0.3s ease-in-out;
-  grid-area: generate-btn;
-  display: flex;
-  justify-content: center;
-  grid-area: show-btn;
-}
-
-.settings-btn {
-  padding: 10px 10px;
-  border-radius: 5px;
-  border: none;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
-  outline: none;
-  cursor: pointer;
-  background-color: var(--color-background);
-  color: #ffffff;
-  transition: background-color 0.3s ease-in-out;
-  grid-area: generate-btn;
-  display: flex;
-  justify-content: center;
-  grid-area: settings-btn;
-}
-
-.settings-btn.active {
+.gear-icon-wrapper.active {
   background-color: rgb(47 47 47 / 1);
+}
+
+.eye-icon-wrapper {
+  grid-area: eye-icon-wrapper;
+}
+
+.eye-icon-wrapper:hover .show-password-icon {
+  transform: scale(1.2);
+}
+
+.dice-icon-wrapper {
+  grid-area: dice-icon-wrapper;
+}
+
+.dice-icon-wrapper:hover .generate-icon {
+  transform: scale(1.2);
+}
+
+.gear-icon-wrapper {
+  grid-area: gear-icon-wrapper;
+}
+
+.gear-icon-wrapper:hover .settings-icon {
+  transform: rotate(-45deg);
 }
 
 .settings-container {
