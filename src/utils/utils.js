@@ -4,14 +4,6 @@ const generatePassword = (options, setInfoMessage) => {
   const numbers = '0123456789'
   const symbols = '!@#$%^&*()-_=+[]{}|;:\'",.<>?/'
 
-  const noCheckboxSelected =
-    !settings.letters.uppercase &&
-    !settings.letters.lowercase &&
-    !settings.letters.randomCase &&
-    !settings.numbers &&
-    !settings.symbols &&
-    !settings.ownSet
-
   const generateRandomCase = () => {
     const randomNumber = Math.random()
     if (randomNumber < 0.3) {
@@ -37,6 +29,14 @@ const generatePassword = (options, setInfoMessage) => {
     ownSet: options.ownSet,
     ownSetInput: options.ownSetInput,
   }
+
+  const noCheckboxSelected =
+    !settings.letters.uppercase &&
+    !settings.letters.lowercase &&
+    !settings.letters.randomCase &&
+    !settings.numbers &&
+    !settings.symbols &&
+    !settings.ownSet
 
   if (noCheckboxSelected) {
     setInfoMessage('No checkbox selected')
