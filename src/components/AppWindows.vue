@@ -1,14 +1,14 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import PasswordForm from './PasswordForm.vue';
-import SavedPasswords from './SavedPasswords.vue';
+import { onMounted, ref } from 'vue'
+import PasswordForm from './PasswordForm.vue'
+import SavedPasswords from './SavedPasswords.vue'
 import { generateUniqueId } from '../utils/utils'
-import { simulateServerRequest } from '../utils/utils';
+import { simulateServerRequest } from '../utils/utils'
 
-const savedPasswords = ref([]);
-const activeWindow = ref('main');
-const zIndexMain = ref(2);
-const zIndexSaved = ref(1);
+const savedPasswords = ref([])
+const activeWindow = ref('main')
+const zIndexMain = ref(2)
+const zIndexSaved = ref(1)
 const showIcon = ref(false)
 const isLoading = ref(false)
 const isDeleting = ref(false)
@@ -20,9 +20,8 @@ const generationInfoMessage = ref('')
 const formData = ref({
   id: '',
   url: '',
-  password: ''
-});
-
+  password: '',
+})
 
 const updateFormData = (data) => {
   formData.value = data
@@ -33,15 +32,15 @@ const updateGenerationInfoMessage = (message) => {
 }
 
 const setMainActive = () => {
-  if (activeWindow.value === 'main') return;
-  zIndexMain.value++;
-  activeWindow.value = 'main';
+  if (activeWindow.value === 'main') return
+  zIndexMain.value++
+  activeWindow.value = 'main'
 }
 
 const setSavedActive = () => {
-  if (activeWindow.value === 'saved') return;
-  zIndexSaved.value++;
-  activeWindow.value = 'saved';
+  if (activeWindow.value === 'saved') return
+  zIndexSaved.value++
+  activeWindow.value = 'saved'
   showIcon.value = false
 }
 
@@ -84,12 +83,11 @@ const deletePassword = async (id) => {
   try {
     await simulateServerRequest('Failed to delete password. Try again later')
 
-    savedPasswords.value = savedPasswords.value.filter(item => item.id !== id)
+    savedPasswords.value = savedPasswords.value.filter((item) => item.id !== id)
     localStorage.setItem('savedPasswords', JSON.stringify(savedPasswords.value))
 
     popupSuccessMessage.value = 'Password deleted successfully'
     popupErrorMessage.value = ''
-
   } catch (error) {
     popupErrorMessage.value = error
     popupSuccessMessage.value = ''
@@ -106,7 +104,7 @@ const deletePassword = async (id) => {
 
 onMounted(() => {
   setTimeout(() => {
-    if (activeWindow.value === 'saved' || localStorage.getItem('isFirstEntry')) return;
+    if (activeWindow.value === 'saved' || localStorage.getItem('isFirstEntry')) return
     showIcon.value = true
 
     localStorage.setItem('isFirstEntry', false)
@@ -120,34 +118,42 @@ onMounted(() => {
 
 <template>
   <section class="windows">
-    <div class="main-window" @click="setMainActive" :style="{ 'z-index': zIndexMain }"
-      :class="{ 'main-window_active': activeWindow === 'main' }">
-      <PasswordForm 
-      :activeWindow="activeWindow" 
-      :savedPasswords="savedPasswords" 
-      :addPassword="addPassword"
-      :isLoading="isLoading" 
-      :errorMessage="errorMessage" 
-      :formData="formData" 
-      @updateFormData="updateFormData"
-      :successMessage="successMessage" 
-      :generationInfoMessage="generationInfoMessage"
-      @updateGenerationInfoMessage="updateGenerationInfoMessage"
-      :updateGenerationInfoMessage="updateGenerationInfoMessage" />
+    <div
+      class="main-window"
+      @click="setMainActive"
+      :style="{ 'z-index': zIndexMain }"
+      :class="{ 'main-window_active': activeWindow === 'main' }"
+    >
+      <PasswordForm
+        :activeWindow="activeWindow"
+        :savedPasswords="savedPasswords"
+        :addPassword="addPassword"
+        :isLoading="isLoading"
+        :errorMessage="errorMessage"
+        :formData="formData"
+        @updateFormData="updateFormData"
+        :successMessage="successMessage"
+        :generationInfoMessage="generationInfoMessage"
+        @updateGenerationInfoMessage="updateGenerationInfoMessage"
+        :updateGenerationInfoMessage="updateGenerationInfoMessage"
+      />
     </div>
 
-    <div 
-      class="saved-window" 
-      @click="setSavedActive" :style="{ 'z-index': zIndexSaved }"
-      :class="{ 'saved-window_active': activeWindow === 'saved' }">
-      <SavedPasswords 
-      :activeWindow="activeWindow" 
-      :showIcon="showIcon" 
-      :savedPasswords="savedPasswords"
-      :deletePassword="deletePassword" 
-      :isDeleting="isDeleting" 
-      :popupSuccessMessage="popupSuccessMessage"
-      :popupErrorMessage="popupErrorMessage" />
+    <div
+      class="saved-window"
+      @click="setSavedActive"
+      :style="{ 'z-index': zIndexSaved }"
+      :class="{ 'saved-window_active': activeWindow === 'saved' }"
+    >
+      <SavedPasswords
+        :activeWindow="activeWindow"
+        :showIcon="showIcon"
+        :savedPasswords="savedPasswords"
+        :deletePassword="deletePassword"
+        :isDeleting="isDeleting"
+        :popupSuccessMessage="popupSuccessMessage"
+        :popupErrorMessage="popupErrorMessage"
+      />
     </div>
   </section>
 </template>
@@ -167,7 +173,9 @@ onMounted(() => {
   top: 50%;
   left: 50%;
   transform: translate(-38%, -64%);
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out 0.2s;
+  transition:
+    transform 0.5s ease-in-out,
+    opacity 0.5s ease-in-out 0.2s;
   opacity: 0.7;
   cursor: pointer;
   padding: 15px;
