@@ -38,4 +38,14 @@
   color: #000;
   user-select: none;
 }
+
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 10px 30px;
+  }  
+
+  .title {
+    font-size: 16px;
+  }
+}
 </style>
