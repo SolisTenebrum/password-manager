@@ -1,13 +1,15 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, defineEmits, watch } from 'vue';
-import GenerateIcon from './icons/GenerateIcon.vue';
-import ShowPasswordIcon from './icons/ShowPasswordIcon.vue';
-import SettingsIcon from './icons/SettingsIcon.vue';
-import ActionButton from './ActionButton.vue';
+import { ref, onMounted, onBeforeUnmount, defineEmits, watch } from 'vue'
+import GenerateIcon from './icons/GenerateIcon.vue'
+import ShowPasswordIcon from './icons/ShowPasswordIcon.vue'
+import SettingsIcon from './icons/SettingsIcon.vue'
+import ActionButton from './ActionButton.vue'
+import TapIcon from './icons/TapIcon.vue'
 import { generatePassword } from '../utils/utils'
 
 const props = defineProps({
   activeWindow: String,
+  showIcon: Boolean,
   addPassword: Function,
   savedPasswords: Array,
   isLoading: Boolean,
@@ -15,16 +17,19 @@ const props = defineProps({
   formData: Object,
   generationInfoMessage: String,
   successMessage: String,
-  updateGenerationInfoMessage: Function
+  updateGenerationInfoMessage: Function,
 })
 
 const emit = defineEmits(['update:formData', 'update:generationInfoMessage'])
 
 const localFormData = ref({ ...props.formData })
 
-watch(() => props.formData, (newFormData) => {
-  localFormData.value = { ...newFormData }
-})
+watch(
+  () => props.formData,
+  (newFormData) => {
+    localFormData.value = { ...newFormData }
+  },
+)
 
 const inputType = ref('password')
 const isShowPasswordIconActive = ref(false)
@@ -41,7 +46,7 @@ const options = ref({
   numbers: null,
   symbols: null,
   ownSet: null,
-  ownSetInput: ''
+  ownSetInput: '',
 })
 
 const handleRandomCaseChange = () => {
@@ -74,7 +79,7 @@ const handleOwnSetInputChange = (event) => {
 }
 
 const onGenerate = () => {
-  localFormData.value.password = generatePassword(options.value, props.updateGenerationInfoMessage);
+  localFormData.value.password = generatePassword(options.value, props.updateGenerationInfoMessage)
 
   if (localFormData.value.password) {
     inputType.value = 'text'
@@ -134,75 +139,148 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="container">
+    <tap-icon :showIcon="showIcon"></tap-icon>
     <h2 class="title">Add Service</h2>
-    <form class="form" @submit.prevent="onSubmit">
+    <form class="form" @submit.prevent="onSubmit" :class="activeWindow === 'main' && 'active'">
       <div class="inputs">
-        <input 
-          name="url" 
-          class="input" 
-          placeholder="Enter service URL" 
-          required type="url"
-          v-model="localFormData.url" />
-        <input 
-          name="password" 
-          class="input" 
-          placeholder="Enter password" 
+        <input
+          name="url"
+          class="input"
+          placeholder="Enter service URL"
           required
-          :type="inputType.includes('text') ? 'text' : 'password'" 
-          :minlength="6" 
+          type="url"
+          v-model="localFormData.url"
+        />
+        <input
+          name="password"
+          class="input"
+          placeholder="Enter password"
+          required
+          :type="inputType.includes('text') ? 'text' : 'password'"
+          :minlength="6"
           :maxlength="64"
-          v-model="localFormData.password" />
+          v-model="localFormData.password"
+        />
         <action-button @click="showPassword" class="eye-icon-wrapper">
           <show-password-icon :isActive="isShowPasswordIconActive"></show-password-icon>
         </action-button>
         <action-button @click="onGenerate" class="dice-icon-wrapper">
           <generate-icon></generate-icon>
         </action-button>
-        <action-button :class="isSettingsActive && 'active'" @click="openSettings"
-          class="gear-icon-wrapper">
+        <action-button
+          :class="isSettingsActive && 'active'"
+          @click="openSettings"
+          class="gear-icon-wrapper"
+        >
           <settings-icon :isActive="isSettingsActive"></settings-icon>
         </action-button>
         <div class="info-container">
-          <p v-if="props.generationInfoMessage" class="info-text">{{ props.generationInfoMessage }}</p>
+          <p v-if="props.generationInfoMessage" class="info-text">
+            {{ props.generationInfoMessage }}
+          </p>
           <span v-else-if="isLoading" class="loader"></span>
           <p v-else-if="props.errorMessage" class="info-text error">{{ props.errorMessage }}</p>
-          <p v-else-if="props.successMessage" class="info-text success">{{ props.successMessage }}</p>
+          <p v-else-if="props.successMessage" class="info-text success">
+            {{ props.successMessage }}
+          </p>
         </div>
         <div class="settings-container" :class="isSettingsActive && 'active'">
           <ul class="settings-list">
             <li class="settings-item">
-              <input id="length" type="number" min="6" max="64" @input="updateLength" v-model="options.length" />
+              <input
+                id="length"
+                type="number"
+                min="6"
+                max="64"
+                @input="updateLength"
+                v-model="options.length"
+              />
               <label for="length" class="label">Length</label>
             </li>
             <li class="settings-item">
-              <input id="lowercase" type="checkbox" v-model="options.letters.lowercase"
-                :disabled="options.letters.randomCase || options.ownSet" @change="handleUpperLowercaseChange">
-              <label for="lowercase" class="label">Lowercase</label>
+              <input
+                id="lowercase"
+                type="checkbox"
+                class="checkbox"
+                v-model="options.letters.lowercase"
+                :disabled="options.letters.randomCase || options.ownSet"
+                @change="handleUpperLowercaseChange"
+              />
+              <label for="lowercase" class="label custom-checkbox"
+                ><span class="custom-checkbox-indicator"></span>Lowercase</label
+              >
             </li>
             <li class="settings-item">
-              <input id="uppercase" type="checkbox" v-model="options.letters.uppercase"
-                :disabled="options.letters.randomCase || options.ownSet" @change="handleUpperLowercaseChange">
-              <label for="uppercase" class="label">Uppercase</label>
+              <input
+                id="uppercase"
+                type="checkbox"
+                class="checkbox"
+                v-model="options.letters.uppercase"
+                :disabled="options.letters.randomCase || options.ownSet"
+                @change="handleUpperLowercaseChange"
+              />
+              <label for="uppercase" class="label custom-checkbox"
+                ><span class="custom-checkbox-indicator"></span>Uppercase</label
+              >
             </li>
             <li class="settings-item">
-              <input id="randomcase" type="checkbox" v-model="options.letters.randomCase"
+              <input
+                id="randomcase"
+                type="checkbox"
+                class="checkbox"
+                v-model="options.letters.randomCase"
                 :disabled="options.letters.lowercase || options.letters.uppercase || options.ownSet"
-                @change="handleRandomCaseChange">
-              <label for="randomcase" class="label">RandomCase</label>
+                @change="handleRandomCaseChange"
+              />
+              <label for="randomcase" class="label custom-checkbox"
+                ><span class="custom-checkbox-indicator"></span>RandomCase</label
+              >
             </li>
             <li class="settings-item">
-              <input id="numbers" type="checkbox" v-model="options.numbers" :disabled="options.ownSet">
-              <label for="numbers" class="label">Numbers</label>
+              <input
+                id="numbers"
+                type="checkbox"
+                class="checkbox"
+                v-model="options.numbers"
+                :disabled="options.ownSet"
+              />
+              <label for="numbers" class="label custom-checkbox"
+                ><span class="custom-checkbox-indicator"></span>Numbers</label
+              >
             </li>
             <li class="settings-item">
-              <input id="symbols" type="checkbox" v-model="options.symbols" :disabled="options.ownSet">
-              <label for="symbols" class="label">Symbols</label>
+              <input
+                id="symbols"
+                type="checkbox"
+                class="checkbox"
+                v-model="options.symbols"
+                :disabled="options.ownSet"
+              />
+              <label for="symbols" class="label custom-checkbox"
+                ><span class="custom-checkbox-indicator"></span>Symbols</label
+              >
             </li>
             <li class="settings-item">
-              <input id="ownset" type="checkbox" v-model="options.ownSet" @change="handleOwnSetChange">
-              <label v-if="!options.ownSet" for="ownset" class="label">Own set</label>
-              <input v-if="options.ownSet" class="own-set-input" type="text" v-model="options.ownSetInput" minlength="1"
-                :maxlength="options.length" @change="handleOwnSetInputChange" />
+              <input
+                id="ownset"
+                type="checkbox"
+                class="checkbox"
+                v-model="options.ownSet"
+                @change="handleOwnSetChange"
+              />
+              <label for="ownset" class="label custom-checkbox"
+                ><span class="custom-checkbox-indicator"></span
+                >{{ !options.ownSet ? 'Own set' : '' }}</label
+              >
+              <input
+                v-if="options.ownSet"
+                class="own-set-input"
+                type="text"
+                v-model="options.ownSetInput"
+                minlength="1"
+                :maxlength="options.length"
+                @change="handleOwnSetInputChange"
+              />
             </li>
           </ul>
         </div>
@@ -237,17 +315,24 @@ onBeforeUnmount(() => {
   max-width: 400px;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.form.active {
+  opacity: 1;
 }
 
 .inputs {
   display: grid;
-  grid-template-areas: 'url url url url'
+  grid-template-areas:
+    'url url url url'
     'password eye-icon-wrapper dice-icon-wrapper gear-icon-wrapper';
   width: 100%;
   gap: 10px;
   margin: auto 0;
   position: relative;
-  grid-template-columns: 1fr 40px;
+  grid-template-columns: 1fr 40px 40px 40px;
 }
 
 .input {
@@ -357,9 +442,11 @@ onBeforeUnmount(() => {
   transform: translate(50%, 50%);
   visibility: hidden;
   opacity: 0;
-  transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  transition:
+    visibility 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
   width: 100%;
-  max-width: 165px;
+  max-width: 160px;
 }
 
 .settings-container.active {
@@ -372,7 +459,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   justify-content: center;
   list-style: none;
-  padding: 0;
+  padding-left: 0;
   row-gap: 10px;
   color: white;
 }
@@ -381,6 +468,56 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   column-gap: 7px;
+}
+
+.settings-item:first-of-type {
+  padding-left: 0;
+}
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  gap: 8px;
+}
+
+.custom-checkbox-indicator {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.checkbox:checked + .custom-checkbox .custom-checkbox-indicator {
+  background: var(--main-color);
+  border-color: var(--main-color);
+}
+
+.checkbox:disabled + .custom-checkbox {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.custom-checkbox-indicator::after {
+  content: '';
+  display: none;
+  width: 8px;
+  height: 8px;
+  margin: auto;
+  background: url('../assets/icons/check-mark.svg') no-repeat center center;
+  border-radius: 2px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.checkbox:checked + .custom-checkbox .custom-checkbox-indicator::after {
+  display: block;
 }
 
 #length {
@@ -396,7 +533,7 @@ onBeforeUnmount(() => {
   text-transform: uppercase;
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -459,15 +596,51 @@ input[type="checkbox"] {
 }
 
 @keyframes bblFadInOut {
-
   0%,
   80%,
   100% {
-    box-shadow: 0 2.5em 0 -1.3em
+    box-shadow: 0 2.5em 0 -1.3em;
   }
 
   40% {
-    box-shadow: 0 2.5em 0 0
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .settings-container {
+    right: 80px;
+    top: -34px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .inputs {
+    grid-template-areas:
+      'url url url'
+      'password password password'
+      'eye-icon-wrapper dice-icon-wrapper gear-icon-wrapper';
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .info-container {
+    top: 40%;
+    left: 50%;
+  }
+
+  .loader {
+    top: 40%;
+  }
+
+  .settings-container {
+    top: 10%;
   }
 }
 </style>

@@ -126,6 +126,7 @@ onMounted(() => {
     >
       <PasswordForm
         :activeWindow="activeWindow"
+        :showIcon="showIcon"
         :savedPasswords="savedPasswords"
         :addPassword="addPassword"
         :isLoading="isLoading"
@@ -187,5 +188,17 @@ onMounted(() => {
   transform: translate(-50%, -50%);
   opacity: 1;
   cursor: default;
+}
+
+@media screen and (max-width: 768px) {
+  .main-window,
+  .saved-window {
+    transform: translate(-50%, -65%) scale(0.9);
+  }
+
+  .main-window_active,
+  .saved-window_active {
+    transform: translate(-50%, -50%);
+  }
 }
 </style>

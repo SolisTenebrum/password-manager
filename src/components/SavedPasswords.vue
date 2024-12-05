@@ -1,11 +1,11 @@
 <script setup>
-import { ref, computed } from 'vue';
-import ClickIcon from './icons/ClickIcon.vue';
-import CopyIcon from './icons/CopyIcon.vue';
-import DeleteIcon from './icons/DeleteIcon.vue';
-import LoadingIcon from './icons/LoadingIcon.vue';
-import ShowPasswordIcon from './icons/ShowPasswordIcon.vue';
-import { copyToClipboard } from '@/utils/utils';
+import { ref, computed } from 'vue'
+import ClickIcon from './icons/ClickIcon.vue'
+import CopyIcon from './icons/CopyIcon.vue'
+import DeleteIcon from './icons/DeleteIcon.vue'
+import LoadingIcon from './icons/LoadingIcon.vue'
+import ShowPasswordIcon from './icons/ShowPasswordIcon.vue'
+import { copyToClipboard } from '@/utils/utils'
 
 const props = defineProps({
   activeWindow: String,
@@ -14,7 +14,7 @@ const props = defineProps({
   deletePassword: Function,
   isDeleting: Boolean,
   popupSuccessMessage: String,
-  popupErrorMessage: String
+  popupErrorMessage: String,
 })
 
 const isIconActive = ref({})
@@ -23,30 +23,31 @@ const isCopied = ref(false)
 
 const filteredPasswords = computed(() => {
   return props.savedPasswords.filter((item) =>
-    item.url.toLowerCase().includes(searchInput.value.toLowerCase()))
+    item.url.toLowerCase().includes(searchInput.value.toLowerCase()),
+  )
 })
 
 const showPassword = (passwordId) => {
-  const password = props.savedPasswords.find(pw => pw.id === passwordId)
+  const password = props.savedPasswords.find((pw) => pw.id === passwordId)
   if (password) {
     password.isVisible = !password.isVisible
     isIconActive.value = {
       ...isIconActive.value,
-      [passwordId]: password.isVisible
+      [passwordId]: password.isVisible,
     }
   }
 }
 
 const onCopy = async (password) => {
-  isCopied.value = true;
+  isCopied.value = true
   try {
-    await copyToClipboard(password);
+    await copyToClipboard(password)
     setTimeout(() => {
-      isCopied.value = false;
-    }, 1000);
+      isCopied.value = false
+    }, 1000)
   } catch (err) {
-    console.error('Failed to copy password:', err);
-    isCopied.value = false;
+    console.error('Failed to copy password:', err)
+    isCopied.value = false
   }
 }
 </script>
@@ -60,33 +61,53 @@ const onCopy = async (password) => {
         <div class="circle"></div>
         <div class="line"></div>
       </div>
-      <input class="search-input" :class="activeWindow === 'saved' && 'visible'" type="text" placeholder="Search"
-        v-model="searchInput" />
+      <input
+        class="search-input"
+        :class="activeWindow === 'saved' && 'visible'"
+        type="text"
+        placeholder="Search"
+        v-model="searchInput"
+      />
     </div>
-    <div class="saved-passwords-empty" v-if="savedPasswords.length === 0">
+    <div
+      class="saved-passwords-empty"
+      :class="activeWindow === 'saved' && 'visible'"
+      v-if="savedPasswords.length === 0"
+    >
       <p class="text">You don't have any saved passwords yet</p>
     </div>
     <div class="saved-passwords" :class="activeWindow === 'saved' && 'visible'" v-else>
       <ul class="saved-passwords-list">
         <li v-for="item in filteredPasswords" :key="item" class="saved-passwords-item">
           <input class="data" :value="item.url" disabled type="url" />
-          <input class="data" :value="item.password" disabled :type="item.isVisible ? 'text' : 'password'" />
-          <button class="show-btn" 
-            :class="isDeleting && 'disabled'" type="button"
-            @click="showPassword(item.id)">
+          <input
+            class="data"
+            :value="item.password"
+            disabled
+            :type="item.isVisible ? 'text' : 'password'"
+          />
+          <button
+            class="show-btn"
+            :class="isDeleting && 'disabled'"
+            type="button"
+            @click="showPassword(item.id)"
+          >
             <show-password-icon :isActive="isIconActive[item.id]"></show-password-icon>
           </button>
-          <button 
-            class="copy-btn" 
-            :class="isDeleting && 'disabled'" 
+          <button
+            class="copy-btn"
+            :class="isDeleting && 'disabled'"
             type="button"
-            @click="onCopy(item.password)">
+            @click="onCopy(item.password)"
+          >
             <copy-icon></copy-icon>
           </button>
-          <button class="delete-btn" 
-            :class="isDeleting && 'disabled'" 
+          <button
+            class="delete-btn"
+            :class="isDeleting && 'disabled'"
             type="button"
-            @click="deletePassword(item.id)">
+            @click="deletePassword(item.id)"
+          >
             <template v-if="!isDeleting"><delete-icon></delete-icon></template>
             <template v-else><loading-icon></loading-icon></template>
           </button>
@@ -96,7 +117,7 @@ const onCopy = async (password) => {
   </div>
   <div class="copy-popup" :class="isCopied && 'visible'">
     <div class="copy-popup-container">
-      <p class="message clipboard">Copied to clipboard </p>
+      <p class="message clipboard">Copied to clipboard</p>
     </div>
   </div>
   <div class="error-popup" :class="props.popupErrorMessage && 'visible'">
@@ -109,7 +130,6 @@ const onCopy = async (password) => {
       <p class="message success">{{ props.popupSuccessMessage }}</p>
     </div>
   </div>
-
 </template>
 
 <style scoped>
@@ -206,6 +226,12 @@ const onCopy = async (password) => {
   height: 100%;
   align-items: center;
   justify-content: center;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.saved-passwords-empty.visible {
+  opacity: 1;
 }
 
 .text {
@@ -351,5 +377,14 @@ const onCopy = async (password) => {
 
 .message.success {
   color: var(--success-color);
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+  }
+
+  .title {
+    font-size: 16px;
+  }
 }
 </style>

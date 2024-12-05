@@ -21,4 +21,10 @@
   justify-content: center;
   justify-self: flex-end;
 }
+
+@media screen and (max-width: 480px) {
+  .action-button {
+    justify-self: auto;
+  }
+}
 </style>

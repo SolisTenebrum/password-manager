@@ -1,5 +1,4 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
   <header class="header">
@@ -17,6 +16,7 @@
   right: 0;
   z-index: 99;
   padding: 0 10px 10px;
+  max-width: 100vw;
 }
 
 .container {
@@ -42,7 +42,7 @@
 @media screen and (max-width: 768px) {
   .container {
     padding: 10px 30px;
-  }  
+  }
 
   .title {
     font-size: 16px;
