@@ -141,15 +141,15 @@ const copyToClipboard = async (password) => {
 const simulateServerRequest = (error) => {
   const randomChanceToConnect = Math.floor(Math.random() * 10)
 
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (randomChanceToConnect > 5) {
-          resolve('Success')
-        } else {
-          reject(error)
-        }
-      }, 1000)
-    })
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (randomChanceToConnect > 2) {
+        resolve('Success')
+      } else {
+        reject(error)
+      }
+    }, 1000)
+  })
 }
 
 export { generateUniqueId, generatePassword, copyToClipboard, simulateServerRequest }
