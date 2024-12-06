@@ -31,6 +31,15 @@ watch(
   },
 )
 
+watch(
+  () => localFormData.value.url,
+  (newUrl) => {
+    if (newUrl && !newUrl.startsWith('https://') && !newUrl.startsWith('http://')) {
+      localFormData.value.url = `https://${newUrl}`
+    }
+  },
+)
+
 const inputType = ref('password')
 const isShowPasswordIconActive = ref(false)
 const isSettingsActive = ref(false)
@@ -116,6 +125,9 @@ const closeSettings = () => {
 }
 
 const updateLength = (event) => {
+  if (event.target.value > 64) {
+    event.target.value = 64
+  }
   options.value.length = event.target.value
 }
 
@@ -360,7 +372,7 @@ onBeforeUnmount(() => {
 
 .info-container {
   position: absolute;
-  top: 50%;
+  top: 70%;
   left: 50%;
   width: 100%;
   height: 100%;
@@ -622,6 +634,12 @@ input[type='checkbox'] {
 }
 
 @media screen and (max-width: 480px) {
+  .container {
+    padding: var(--window-padding-mobile);
+  }
+  .title {
+    align-self: center;
+  }
   .inputs {
     grid-template-areas:
       'url url url'
