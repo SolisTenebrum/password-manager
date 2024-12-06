@@ -16,3 +16,23 @@ input[type='checkbox'] {
   pointer-events: none;
   position: absolute;
 }
+
+.simplebar-scrollbar {
+  background-color: #8d8d8d;
+  border-radius: 2px;
+}
+
+.simplebar-scrollbar:before {
+  background-color: transparent !important;
+}
+
+.simplebar-track {
+  background-color: #dfdfdf;
+  border-radius: 2px;
+}
+
+.simplebar-content {
+  display: flex;
+  flex-direction: column;
+  padding-right: 20px !important;
+}
