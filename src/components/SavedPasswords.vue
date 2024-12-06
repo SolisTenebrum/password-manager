@@ -245,6 +245,7 @@ onBeforeUnmount(() => {
 
 .search-input {
   padding: 10px;
+  padding-right: 40px;
   border-radius: 5px;
   border: none;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
@@ -261,6 +262,10 @@ onBeforeUnmount(() => {
 
 .search-icon {
   cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .saved-passwords-empty {
@@ -458,7 +463,7 @@ onBeforeUnmount(() => {
 
 @media screen and (max-width: 480px) {
   .container {
-    padding: var(--window-padding-mobile);
+    padding: var(--saved-passwords-window-padding-mobile);
   }
 
   .container-header {
@@ -474,13 +479,13 @@ onBeforeUnmount(() => {
   }
 
   .search-input {
-    max-width: 340px;
     width: 100%;
   }
 
   .search-icon {
-    top: 15px;
-    left: 190px;
+    position: absolute;
+    top: 50%;
+    right: 0px;
     transform: translate(-50%, -50%);
   }
 
