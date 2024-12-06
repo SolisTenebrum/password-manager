@@ -1,11 +1,15 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import ClickIcon from './icons/ClickIcon.vue'
 import CopyIcon from './icons/CopyIcon.vue'
 import DeleteIcon from './icons/DeleteIcon.vue'
 import LoadingIcon from './icons/LoadingIcon.vue'
 import ShowPasswordIcon from './icons/ShowPasswordIcon.vue'
+import SearchIcon from './icons/SearchIcon.vue'
+import DotsIcon from './icons/DotsIcon.vue'
 import { copyToClipboard } from '@/utils/utils'
+import simplebar from 'simplebar-vue'
+import 'simplebar-vue/dist/simplebar.min.css'
 
 const props = defineProps({
   activeWindow: String,
@@ -20,6 +24,10 @@ const props = defineProps({
 const isIconActive = ref({})
 const searchInput = ref('')
 const isCopied = ref(false)
+const isMoreActionsMenuOpen = ref({
+  id: null,
+  position: { top: '0px' },
+})
 
 const filteredPasswords = computed(() => {
   return props.savedPasswords.filter((item) =>
@@ -50,25 +58,55 @@ const onCopy = async (password) => {
     isCopied.value = false
   }
 }
+
+const toggleMoreActionsMenu = (itemId, event) => {
+  const button = event.target.closest('.more-btn')
+  if (button) {
+    const buttonRect = button.getBoundingClientRect()
+    const position = {
+      bottom: `${buttonRect.bottom - window.scrollY}px`,
+    }
+
+    if (isMoreActionsMenuOpen.value.id === itemId) {
+      isMoreActionsMenuOpen.value = { id: null, position: { bottom: '0px' } }
+    } else {
+      isMoreActionsMenuOpen.value = { id: itemId, position }
+    }
+  }
+}
+
+const handleClickOutside = (event) => {
+  const menu = event.target.closest('.more-actions-menu')
+  const button = event.target.closest('.more-btn')
+  if (!menu && !button) {
+    isMoreActionsMenuOpen.value = {}
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <template>
   <div class="container">
     <click-icon :showIcon="showIcon"></click-icon>
-    <h2 class="title">Saved passwords</h2>
-    <div class="search-input-container" v-if="savedPasswords.length">
-      <div class="search-icon" :class="activeWindow === 'saved' && 'visible'">
-        <div class="circle"></div>
-        <div class="line"></div>
-      </div>
-      <input
-        class="search-input"
+    <div class="container-header">
+      <h2 class="title" :class="activeWindow === 'main' && 'active'">Saved passwords</h2>
+      <div
+        class="search-input-container"
+        v-if="savedPasswords.length"
         :class="activeWindow === 'saved' && 'visible'"
-        type="text"
-        placeholder="Search"
-        v-model="searchInput"
-      />
+      >
+        <search-icon></search-icon>
+        <input class="search-input" type="text" placeholder="Search" v-model="searchInput" />
+      </div>
     </div>
+
     <div
       class="saved-passwords-empty"
       :class="activeWindow === 'saved' && 'visible'"
@@ -76,8 +114,13 @@ const onCopy = async (password) => {
     >
       <p class="text">You don't have any saved passwords yet</p>
     </div>
-    <div class="saved-passwords" :class="activeWindow === 'saved' && 'visible'" v-else>
-      <ul class="saved-passwords-list">
+    <ul class="saved-passwords-list" :class="activeWindow === 'saved' && 'visible'" v-else>
+      <simplebar
+        :style="{
+          maxHeight: '100%',
+          height: '100%',
+        }"
+      >
         <li v-for="item in filteredPasswords" :key="item" class="saved-passwords-item">
           <input class="data" :value="item.url" disabled type="url" />
           <input
@@ -86,34 +129,67 @@ const onCopy = async (password) => {
             disabled
             :type="item.isVisible ? 'text' : 'password'"
           />
-          <button
-            class="show-btn"
-            :class="isDeleting && 'disabled'"
-            type="button"
-            @click="showPassword(item.id)"
-          >
-            <show-password-icon :isActive="isIconActive[item.id]"></show-password-icon>
-          </button>
-          <button
-            class="copy-btn"
-            :class="isDeleting && 'disabled'"
-            type="button"
-            @click="onCopy(item.password)"
-          >
-            <copy-icon></copy-icon>
-          </button>
-          <button
-            class="delete-btn"
-            :class="isDeleting && 'disabled'"
-            type="button"
-            @click="deletePassword(item.id)"
-          >
-            <template v-if="!isDeleting"><delete-icon></delete-icon></template>
-            <template v-else><loading-icon></loading-icon></template>
-          </button>
+          <div class="btns">
+            <button
+              class="show-btn"
+              :class="isDeleting && 'disabled'"
+              type="button"
+              @click="showPassword(item.id)"
+            >
+              <show-password-icon :isActive="isIconActive[item.id]"></show-password-icon>
+            </button>
+            <button
+              class="copy-btn"
+              :class="isDeleting && 'disabled'"
+              type="button"
+              @click="onCopy(item.password)"
+            >
+              <copy-icon></copy-icon>
+            </button>
+            <button
+              class="delete-btn"
+              :class="isDeleting && 'disabled'"
+              type="button"
+              @click="deletePassword(item.id)"
+            >
+              <template v-if="!isDeleting"><delete-icon></delete-icon></template>
+              <template v-else><loading-icon></loading-icon></template>
+            </button>
+            <button class="more-btn" type="button" @click="toggleMoreActionsMenu(item.id, $event)">
+              <dots-icon></dots-icon>
+            </button>
+          </div>
+
+          <div class="more-actions-menu visible" v-if="isMoreActionsMenuOpen.id === item.id">
+            <button
+              class="show-btn mobile"
+              :class="isDeleting && 'disabled'"
+              type="button"
+              @click="showPassword(item.id)"
+            >
+              <show-password-icon :isActive="isIconActive[item.id]"></show-password-icon>
+            </button>
+            <button
+              class="copy-btn mobile"
+              :class="isDeleting && 'disabled'"
+              type="button"
+              @click="onCopy(item.password)"
+            >
+              <copy-icon></copy-icon>
+            </button>
+            <button
+              class="delete-btn mobile"
+              :class="isDeleting && 'disabled'"
+              type="button"
+              @click="deletePassword(item.id)"
+            >
+              <template v-if="!isDeleting"><delete-icon></delete-icon></template>
+              <template v-else><loading-icon></loading-icon></template>
+            </button>
+          </div>
         </li>
-      </ul>
-    </div>
+      </simplebar>
+    </ul>
   </div>
   <div class="copy-popup" :class="isCopied && 'visible'">
     <div class="copy-popup-container">
@@ -145,15 +221,31 @@ const onCopy = async (password) => {
   position: relative;
 }
 
-.title {
-  text-transform: uppercase;
+.container-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 30px;
 }
 
+.title {
+  text-transform: uppercase;
+  transition: transform 0.5s ease-in-out;
+}
+
 .search-input-container {
-  position: absolute;
-  top: 30px;
-  right: 30px;
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.search-input-container.visible {
+  opacity: 1;
+  pointer-events: all;
 }
 
 .search-input {
@@ -164,9 +256,7 @@ const onCopy = async (password) => {
   background-color: var(--color-background);
   outline: none;
   width: 200px;
-  opacity: 0;
   transition: opacity 0.5s ease-in-out;
-  pointer-events: none;
   color: #fff;
 }
 
@@ -174,46 +264,8 @@ const onCopy = async (password) => {
   color: #c2c2c2;
 }
 
-.search-input.visible {
-  opacity: 1;
-  pointer-events: all;
-}
-
 .search-icon {
-  position: absolute;
-  top: 43%;
-  left: -27px;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
   cursor: pointer;
-}
-
-.search-icon.visible {
-  opacity: 1;
-}
-
-.circle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 4px solid var(--color-background);
-  position: absolute;
-  top: 50%;
-  left: 0px;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-}
-
-.line {
-  position: absolute;
-  width: 12px;
-  height: 4px;
-  left: 0;
-  top: 50%;
-  background-color: var(--color-background);
-  transform: rotate(45deg) translate(9px, 2.5px);
-  z-index: 0;
 }
 
 .saved-passwords-empty {
@@ -238,39 +290,36 @@ const onCopy = async (password) => {
   text-align: center;
 }
 
-.saved-passwords {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-self: center;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  overflow-y: auto;
-}
-
-.saved-passwords.visible {
-  opacity: 1;
-}
-
 .saved-passwords-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  row-gap: 10px;
   align-self: center;
   width: 100%;
   height: 100%;
   list-style: none;
   padding: 0;
-  padding-right: 5px;
+  max-height: 344px;
+  height: 100%;
+  opacity: 0;
+  overflow-y: auto;
+  pointer-events: none;
+}
+
+.saved-passwords-list.visible {
+  opacity: 1;
+  pointer-events: all;
 }
 
 .saved-passwords-item {
   display: flex;
   column-gap: 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.saved-passwords-item:last-of-type {
+  margin-bottom: 0;
 }
 
 .data {
@@ -285,12 +334,19 @@ const onCopy = async (password) => {
   color: #fff;
   user-select: none;
   pointer-events: none;
+  position: relative;
+}
+
+.btns {
+  display: flex;
+  column-gap: 5px;
 }
 
 .delete-btn,
 .copy-btn,
-.show-btn {
-  padding: 15px 15px;
+.show-btn,
+.more-btn {
+  padding: 12px 12px;
   border-radius: 5px;
   border: none;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
@@ -326,6 +382,15 @@ const onCopy = async (password) => {
 .show-btn.disabled {
   background-color: #c2c2c2;
   pointer-events: none;
+}
+
+.more-btn {
+  background-color: rgb(78, 78, 78);
+  display: none;
+}
+
+.more-actions-menu {
+  display: none;
 }
 
 .error-popup,
@@ -385,6 +450,84 @@ const onCopy = async (password) => {
 
   .title {
     font-size: 16px;
+  }
+
+  .search-input {
+    width: 170px;
+  }
+
+  .saved-passwords-item {
+    column-gap: 5px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container {
+    padding: var(--window-padding-mobile);
+  }
+
+  .container-header {
+    flex-direction: column;
+    row-gap: 10px;
+  }
+
+  .search-input-container {
+    position: relative;
+    align-self: flex-start;
+    width: 100%;
+    flex-direction: row-reverse;
+  }
+
+  .search-input {
+    max-width: 340px;
+    width: 100%;
+  }
+
+  .search-icon {
+    top: 15px;
+    left: 190px;
+    transform: translate(-50%, -50%);
+  }
+
+  .more-actions-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    gap: 10px;
+    top: 43px;
+    right: 0;
+    z-index: 1;
+    background-color: rgb(78, 78, 78);
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 30;
+  }
+
+  .more-actions-menu.visible {
+    display: flex;
+  }
+
+  .more-btn {
+    display: flex;
+  }
+
+  .delete-btn,
+  .copy-btn,
+  .show-btn {
+    display: none;
+  }
+
+  .delete-btn,
+  .copy-btn,
+  .show-btn,
+  .more-btn {
+    padding: 8px;
+  }
+
+  .delete-btn.mobile,
+  .copy-btn.mobile,
+  .show-btn.mobile {
+    display: flex;
   }
 }
 </style>
