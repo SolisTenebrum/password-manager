@@ -10,6 +10,8 @@
   --error-color: #f44336;
   --success-color: #4caf50;
   --main-color: #386646;
+
+  --window-padding-mobile: 30px 15px;
 }
 
 *,
