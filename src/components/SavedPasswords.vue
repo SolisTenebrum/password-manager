@@ -123,12 +123,7 @@ onBeforeUnmount(() => {
       >
         <li v-for="item in filteredPasswords" :key="item" class="saved-passwords-item">
           <input class="data" :value="item.url" disabled type="url" />
-          <input
-            class="data"
-            :value="item.password"
-            disabled
-            :type="item.isVisible ? 'text' : 'password'"
-          />
+          <input class="data" :value="item.password" :type="item.isVisible ? 'text' : 'password'" />
           <div class="btns">
             <button
               class="show-btn"
