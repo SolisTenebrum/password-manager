@@ -635,7 +635,7 @@ input[type='checkbox'] {
 
 @media screen and (max-width: 480px) {
   .container {
-    padding: var(--window-padding-mobile);
+    padding: var(--password-window-padding-mobile);
   }
   .title {
     align-self: center;

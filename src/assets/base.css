@@ -1,6 +1,7 @@
 @import url('./fonts/fonts.css');
 
 :root {
+  /* main */
   --color-text: #000;
   --color-background: #386646;
   --corner-radius: 15px;
@@ -11,7 +12,10 @@
   --success-color: #4caf50;
   --main-color: #386646;
 
-  --window-padding-mobile: 30px 15px;
+
+  /* mobile */
+  --saved-passwords-window-padding-mobile: 30px 15px;
+  --password-window-padding-mobile: 30px 25px;
 }
 
 *,
