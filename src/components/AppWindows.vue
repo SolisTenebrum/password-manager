@@ -193,7 +193,7 @@ onMounted(() => {
 @media screen and (max-width: 768px) {
   .main-window,
   .saved-window {
-    transform: translate(-50%, -65%) scale(0.9);
+    transform: translate(-50%, -67%) scale(0.9);
   }
 
   .main-window_active,
