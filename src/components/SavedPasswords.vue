@@ -207,7 +207,7 @@ onBeforeUnmount(() => {
 .container {
   height: 100%;
   width: 100%;
-  padding: var(--window-padding);
+  padding: 30px 10px 30px 30px;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
   background-color: #ffffff;
   display: flex;
@@ -221,6 +221,7 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  padding-right: 20px;
 }
 
 .title {
@@ -408,6 +409,7 @@ onBeforeUnmount(() => {
   align-items: center;
   visibility: hidden;
   opacity: 0;
+  width: 100%;
 }
 
 .error-popup.visible,
@@ -463,12 +465,13 @@ onBeforeUnmount(() => {
 
 @media screen and (max-width: 480px) {
   .container {
-    padding: var(--saved-passwords-window-padding-mobile);
+    padding: 30px 7.5px 30px 15px;
   }
 
   .container-header {
     flex-direction: column;
     row-gap: 10px;
+    padding-right: 7.5px;
   }
 
   .search-input-container {
@@ -528,6 +531,12 @@ onBeforeUnmount(() => {
   .copy-btn.mobile,
   .show-btn.mobile {
     display: flex;
+  }
+
+  .error-popup,
+  .copy-popup,
+  .success-popup {
+    max-width: 300px;
   }
 }
 </style>

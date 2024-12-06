@@ -12,10 +12,13 @@
   --success-color: #4caf50;
   --main-color: #386646;
 
-
   /* mobile */
   --saved-passwords-window-padding-mobile: 30px 15px;
   --password-window-padding-mobile: 30px 25px;
+}
+
+* {
+  touch-action: manipulation;
 }
 
 *,

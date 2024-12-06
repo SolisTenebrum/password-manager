@@ -20,6 +20,7 @@ input[type='checkbox'] {
 .simplebar-scrollbar {
   background-color: #8d8d8d;
   border-radius: 2px;
+  width: 7px;
 }
 
 .simplebar-scrollbar:before {
@@ -29,6 +30,7 @@ input[type='checkbox'] {
 .simplebar-track {
   background-color: #dfdfdf;
   border-radius: 2px;
+  width: 7px !important;
 }
 
 .simplebar-content {
@@ -37,6 +39,16 @@ input[type='checkbox'] {
   padding-right: 20px !important;
 }
 
-* {
-  touch-action: manipulation; 
+@media screen and (max-width: 480px) {
+  .simplebar-content {
+    padding-right: 7.5px !important;
+  }
+
+  .simplebar-scrollbar {
+    width: 4px;
+  }
+
+  .simplebar-track {
+    width: 4px !important;
+  }
 }
