@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, defineEmits, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import GenerateIcon from './icons/GenerateIcon.vue'
 import ShowPasswordIcon from './icons/ShowPasswordIcon.vue'
 import SettingsIcon from './icons/SettingsIcon.vue'
