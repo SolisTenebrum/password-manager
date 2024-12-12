@@ -26,7 +26,7 @@ const searchInput = ref('')
 const isCopied = ref(false)
 const isMoreActionsMenuOpen = ref({
   id: null,
-  position: { top: '0px' },
+  position: { top: 'unset', bottom: 'unset' },
 })
 
 const filteredPasswords = computed(() => {
@@ -61,14 +61,29 @@ const onCopy = async (password) => {
 
 const toggleMoreActionsMenu = (itemId, event) => {
   const button = event.target.closest('.more-btn')
+  const buttonRect = button.getBoundingClientRect()
+
   if (button) {
-    const buttonRect = button.getBoundingClientRect()
-    const position = {
-      bottom: `${buttonRect.bottom - window.scrollY}px`,
+    const positionAbove = {
+      bottom: `${buttonRect.height + 5}px`,
+      top: 'unset',
+    }
+
+    const positionUnder = {
+      bottom: 'unset',
+      top: `${buttonRect.height + 6}px`,
+    }
+
+    let position
+
+    if (buttonRect.top < 590) {
+      position = positionUnder
+    } else {
+      position = positionAbove
     }
 
     if (isMoreActionsMenuOpen.value.id === itemId) {
-      isMoreActionsMenuOpen.value = { id: null, position: { bottom: '0px' } }
+      isMoreActionsMenuOpen.value = { id: null, position: { bottom: '0px', top: '0px' } }
     } else {
       isMoreActionsMenuOpen.value = { id: itemId, position }
     }
@@ -155,7 +170,14 @@ onBeforeUnmount(() => {
             </button>
           </div>
 
-          <div class="more-actions-menu visible" v-if="isMoreActionsMenuOpen.id === item.id">
+          <div
+            class="more-actions-menu visible"
+            v-if="isMoreActionsMenuOpen.id === item.id"
+            :style="{
+              top: isMoreActionsMenuOpen.position.top,
+              bottom: isMoreActionsMenuOpen.position.bottom,
+            }"
+          >
             <button
               class="show-btn mobile"
               :class="isDeleting && 'disabled'"
